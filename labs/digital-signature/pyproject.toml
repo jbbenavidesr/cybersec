@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "digital-signature"
+version = "0.1.0"
+description = ""
+authors = ["Juan Bernardo Benavides Rubio <jbbenavidesr@gmail.com>"]
+readme = "README.md"
+packages = [{include = "digital_signature", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pynacl = "^1.5.0"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.1.0"
+pytest = "^7.2.1"
+mypy = "^1.0.1"
+flake8 = "^6.0.0"
+isort = "^5.12.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
