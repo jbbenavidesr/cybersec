@@ -2,7 +2,7 @@
 from pathlib import Path
 
 from nacl.encoding import Encoder, RawEncoder
-from nacl.signing import SigningKey, SignedMessage
+from nacl.signing import SignedMessage, SigningKey
 
 
 def sign(

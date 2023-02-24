@@ -2,8 +2,8 @@
 from pathlib import Path
 
 from nacl.encoding import Encoder, RawEncoder
-from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError
+from nacl.signing import VerifyKey
 
 
 def verify(
