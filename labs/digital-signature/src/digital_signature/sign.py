@@ -10,31 +10,34 @@ def sign(
 ) -> bytes:
     """Sign a message with a given signing key."""
     signed = signing_key.sign(message, encoder=encoder)
-    return signed.signature
+    return signed
 
 
 def sign_file(file_name: Path) -> None:
     """Entrypoint to digital signature program."""
     # Generate a new signing key
     signing_key = SigningKey.generate()
+
+    # Get the verification key (Public key)
     verify_key = signing_key.verify_key
     verify_key_bytes = verify_key.encode()
 
-    with file_name.open("rb") as f:
-        message = f.read()
+    # Read the file to sign
+    message = file_name.read_bytes()
 
-    signed = sign(message, signing_key)
+    # Sign the message
+    signed_message = sign(message, signing_key)
 
-    output_file = file_name.with_suffix(".sig")
+    # Write the signed message to a file
+    signed_file = Path(f"{file_name.stem}_signed{file_name.suffix}")
+    signed_file.write_bytes(signed_message)
+
+    # Write the public key to a file
     verify_key_file = file_name.with_suffix(".key")
+    verify_key_file.write_bytes(verify_key_bytes)
 
-    with output_file.open("wb") as f:
-        f.write(signed)
-
-    with verify_key_file.open("wb") as f:
-        f.write(verify_key_bytes)
-
-    print(f"Signed file: {output_file}")
+    # Print the file names that were created
+    print(f"Signed file: {signed_file}")
     print(f"Public key file: {verify_key_file}")
 
 

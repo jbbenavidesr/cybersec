@@ -7,35 +7,30 @@ from nacl.exceptions import BadSignatureError
 
 
 def verify(
-    message: bytes,
-    signature: bytes,
+    signed_message: bytes,
     verify_key: VerifyKey,
     encoder: Encoder = RawEncoder,
 ) -> bool:
-    """Verify a message with a given verify key."""
+    """Verify a message with a given verification key."""
     try:
-        verify_key.verify(message, signature, encoder=encoder)
+        verify_key.verify(signed_message, encoder=encoder)
         return True
     except BadSignatureError:
         return False
 
 
-def verify_file(file_name: Path) -> None:
+def verify_file(file_name: Path, public_key_file: Path) -> None:
     """Entrypoint to digital signature verification program."""
-    with file_name.open("rb") as f:
-        message = f.read()
 
-    verify_key_file = file_name.with_suffix(".key")
-    with verify_key_file.open("rb") as f:
-        verify_key_bytes = f.read()
+    # Read the file to verify
+    signed_message = file_name.read_bytes()
 
+    # Read the public key
+    verify_key_bytes = public_key_file.read_bytes()
     verify_key = VerifyKey(verify_key_bytes)
 
-    signature_file = file_name.with_suffix(".sig")
-    with signature_file.open("rb") as f:
-        signature = f.read()
-
-    if verify(message, signature, verify_key):
+    # Verify the message
+    if verify(signed_message, verify_key):
         print("Signature is valid!")
     else:
         print("Signature is invalid!")
@@ -44,8 +39,9 @@ def verify_file(file_name: Path) -> None:
 if __name__ == "__main__":
     import sys
 
-    if len(sys.argv) != 2:
-        print("Usage: python verify.py <file_name>")
+    if len(sys.argv) != 3:
+        print("Usage: python verify.py <file_name> <public_key_file>")
         sys.exit(1)
-    path = Path(sys.argv[1])
-    verify_file(path)
+    signed_file = Path(sys.argv[1])
+    public_key_file = Path(sys.argv[2])
+    verify_file(signed_file, public_key_file)
