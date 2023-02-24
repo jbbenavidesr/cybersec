@@ -2,15 +2,14 @@
 from pathlib import Path
 
 from nacl.encoding import Encoder, RawEncoder
-from nacl.signing import SigningKey
+from nacl.signing import SigningKey, SignedMessage
 
 
 def sign(
     message: bytes, signing_key: SigningKey, encoder: Encoder = RawEncoder
-) -> bytes:
+) -> SignedMessage:
     """Sign a message with a given signing key."""
-    signed = signing_key.sign(message, encoder=encoder)
-    return signed
+    return signing_key.sign(message, encoder=encoder)
 
 
 def sign_file(file_name: Path) -> None:
@@ -32,12 +31,17 @@ def sign_file(file_name: Path) -> None:
     signed_file = Path(f"{file_name.stem}-signed{file_name.suffix}")
     signed_file.write_bytes(signed_message)
 
+    # Write the signature to a file
+    signature_file = file_name.with_suffix(".sig")
+    signature_file.write_bytes(signed_message.signature)
+
     # Write the public key to a file
     verify_key_file = file_name.with_suffix(".key")
     verify_key_file.write_bytes(verify_key_bytes)
 
     # Print the file names that were created
     print(f"Signed file: {signed_file}")
+    print(f"Signature file: {signature_file}")
     print(f"Public key file: {verify_key_file}")
 
 
