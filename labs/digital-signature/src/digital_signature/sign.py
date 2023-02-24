@@ -29,7 +29,7 @@ def sign_file(file_name: Path) -> None:
     signed_message = sign(message, signing_key)
 
     # Write the signed message to a file
-    signed_file = Path(f"{file_name.stem}_signed{file_name.suffix}")
+    signed_file = Path(f"{file_name.stem}-signed{file_name.suffix}")
     signed_file.write_bytes(signed_message)
 
     # Write the public key to a file
