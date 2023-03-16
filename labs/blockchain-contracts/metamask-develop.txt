@@ -1,0 +1,3 @@
+// I store this here because I'll only use this wallet for playing in development.
+// Never share secrets in a repo.
+enter way slam gift cable tide olive viable security fuel thank input
